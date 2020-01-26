@@ -119,3 +119,8 @@ h4 {
   float:left;
   text-align: left;
 }
+canvas {
+  background-color: #100f18;
+  border-radius: 5px;
+
+}

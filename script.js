@@ -22,15 +22,13 @@ function calcAntennaPower(config, relay) {
   let sumPower = 0;
   for (let i = 0; i < antennas.length; i++) {
     let antenna = antennas[i];
-    if (antenna !== null) {
-      if (!relay || antenna.relay) {
-        if (antenna.comb) {
-          sumPower += antenna.power * antenna.amount;
-          maxPower = Math.max(maxPower, antenna.power);
-        }
-        else {
-          maxSinglePower = Math.max(maxSinglePower, antenna.power);
-        }
+    if (!relay || antenna.relay) {
+      if (antenna.comb) {
+        sumPower += antenna.power * antenna.amount;
+        maxPower = Math.max(maxPower, antenna.power);
+      }
+      else {
+        maxSinglePower = Math.max(maxSinglePower, antenna.power);
       }
     }
   }
@@ -42,12 +40,15 @@ function calcAntennaPower(config, relay) {
     resultPower = 0;
   return Math.max(resultPower, maxSinglePower);
 }
+function round(number) {
+  return ((number * 1E3) | 0) / 1E3;
+}
 function formatNumber(number) {
-  if (number >= 1E15) return (number / 1E15).toFixed(3) + "P";
-  else if (number >= 1E12) return (number / 1E12).toFixed(3) + "T";
-  else if (number >= 1E9) return (number / 1E9).toFixed(3) + "G";
-  else if (number >= 1E6) return (number / 1E6).toFixed(3) + "M";
-  else if (number >= 1E3) return (number / 1E3).toFixed(3) + "K";
+  if (number >= 1E15) return round(number / 1E15) + "P";
+  else if (number >= 1E12) return round(number / 1E12) + "T";
+  else if (number >= 1E9) return round(number / 1E9) + "G";
+  else if (number >= 1E6) return round(number / 1E6) + "M";
+  else if (number >= 1E3) return round(number / 1E3) + "K";
   else return number + "";
 }
 function parseNumber(text){
@@ -66,12 +67,14 @@ function parseNumber(text){
 }
 function initPanel(div, config) {
   let newAntenna = { power: 5000, relay: false, combinable: true, amount: 1 };
-  setInterval(() => {
+  let refresh = () => {
     config.directPower = calcAntennaPower(config, false);
     window[div + "_directPower"].innerText = formatNumber(config.directPower);
     config.relayPower = calcAntennaPower(config, true);
     window[div + "_relayPower"].innerText = formatNumber(config.relayPower);
-  }, 500);
+  }
+  setInterval(refresh, 500);
+  refresh();
   refreshTable(config, window[div + "_table"], newAntenna);
 }
 function initDragbar(panel, dragbar) {
@@ -96,7 +99,9 @@ function initDragbar(panel, dragbar) {
       if (panel.style.left === "") panel.style.left = "0px";
       panel.style.left = (parseInt(panel.style.left) + e.movementX) + "px";
       if (panel.style.top === "") panel.style.top = "0px";
-      panel.style.top = (parseInt(panel.style.top) + e.movementY) + "px";
+      let parsed = parseInt(panel.style.top);
+      if (parsed < 0) parsed = 0;
+      panel.style.top = (parsed + e.movementY) + "px";
     }
   });
 }
@@ -157,14 +162,23 @@ function refreshTable(config, div, newAntenna) {
     refreshTable(config, div, newAntenna);
   }
 }
-initPanel("html_panel1", {
+initPanel("html_panel1", config1 = {
   name: "Tracking Station III",
   antennas: [createAntenna(250E9, true, false, 1)],
 });
-initPanel("html_panel2", {
+initPanel("html_panel2", config2 = {
   name: "Comsat I",
-  antennas: [createAntenna(15E9, true, true, 4), createAntenna(100E9, true, true, 1)],
+  antennas: [createAntenna(20E6, true, true, 4), createAntenna(100E9, false, false, 1)],
 });
 initDragbar(html_panel1, html_panel1_dragbar);
 initDragbar(html_panel2, html_panel2_dragbar);
 initDragbar(html_panel, html_panel_dragbar);
+{
+  let refresh = () => {
+    let id = "html_panel";
+    window[id + "_directDist"].innerText = formatNumber(Math.sqrt(config1.directPower * config2.directPower)) + "m";
+    window[id + "_relayDist"].innerText = formatNumber(Math.sqrt(config1.relayPower * config2.relayPower)) + "m";
+  }
+  setInterval(refresh, 500);
+  refresh();
+}

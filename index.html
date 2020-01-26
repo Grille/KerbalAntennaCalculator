@@ -9,7 +9,7 @@
 <body>
   <div id="main">
     <div id="html_panel1" class="panel">
-      <div id="html_panel1_dragbar" class="drag"></div>
+      <div id="html_panel1_dragbar" class="drag">Vessel 1</div>
       <a class="label">Direct Power:</a><a id="html_panel1_directPower" class="value">0</a>
       <a class="label">Relay Power:</a><a id="html_panel1_relayPower" class="value">0</a>
       <div id="html_panel1_table">
@@ -17,16 +17,17 @@
       </div>
     </div>
     <div id="html_panel2" class="panel" style="left: 100px; top: 100px;">
-      <div id="html_panel2_dragbar" class="drag"></div>
+      <div id="html_panel2_dragbar" class="drag">Vessel 2</div>
       <a class="label">Direct Power:</a><a id="html_panel2_directPower" class="value">0</a>
       <a class="label">Relay Power:</a><a id="html_panel2_relayPower" class="value">0</a>
       <div id="html_panel2_table">
       </div>
     </div>
-    <div id="html_panel" class="panel" style="top: 200px; width: 200px;">
-      <div id="html_panel_dragbar" class="drag"></div>
-      <a>Direct Power: -</a><br>
-      <a>Relay Power: -</a>
+    <div id="html_panel" class="panel" style="top: 450px; width: 450px;">
+      <div id="html_panel_dragbar" class="drag">Result</div>
+      <a class="label" style="width:120px;";>Direct Distance:</a><a id="html_panel_directDist" class="value" style="width:100px;">0</a>
+      <a class="label" style="width:120px;">Relay Distance:</a><a id="html_panel_relayDist" class="value" style="width:100px;">0</a>
+      <canvas width="450px" height="450px"></canvas>
     </div>
   </div>
 </body>
