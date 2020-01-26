@@ -65,17 +65,17 @@ function parseNumber(text){
     default: return float;
   }
 }
-function initPanel(div, config) {
+function refreshSum(id, config){
+  config.directPower = calcAntennaPower(config, false);
+  window[id + "_directPower"].innerText = formatNumber(config.directPower);
+  config.relayPower = calcAntennaPower(config, true);
+  window[id + "_relayPower"].innerText = formatNumber(config.relayPower);
+  refreshResult();
+}
+function initPanel(id, config) {
   let newAntenna = { power: 5000, relay: false, combinable: true, amount: 1 };
-  let refresh = () => {
-    config.directPower = calcAntennaPower(config, false);
-    window[div + "_directPower"].innerText = formatNumber(config.directPower);
-    config.relayPower = calcAntennaPower(config, true);
-    window[div + "_relayPower"].innerText = formatNumber(config.relayPower);
-  }
-  setInterval(refresh, 500);
-  refresh();
-  refreshTable(config, window[div + "_table"], newAntenna);
+  refreshSum(id, config);
+  refreshTable(config, id, newAntenna);
 }
 function initDragbar(panel, dragbar) {
   let down = false;
@@ -112,23 +112,28 @@ function addRow(html, antenna, id) {
   html += `<th><input id="${id}_a" value="${antenna.amount}" spellcheck="false"></th>`;
   return html;
 }
-function setRowEvents(antenna, id) {
-  window[`${id}_p`].onkeydown = window[`${id}_p`].oninput = () => {
-    antenna.power = parseNumber(window[`${id}_p`].value);
+function setRowEvents(antenna, id, i, config) {
+  let idi = `${id}_${i}`;
+  window[`${idi}_p`].onkeydown = window[`${idi}_p`].oninput = () => {
+    antenna.power = parseNumber(window[`${idi}_p`].value);
+    refreshSum(id, config);
   }
-  window[`${id}_r`].onkeydown = window[`${id}_r`].oninput = () => {
-    antenna.relay = window[`${id}_r`].checked;
+  window[`${idi}_r`].onkeydown = window[`${idi}_r`].oninput = () => {
+    antenna.relay = window[`${idi}_r`].checked;
+    refreshSum(id, config);
   }
-  window[`${id}_c`].onkeydown = window[`${id}_c`].oninput = () => {
-    antenna.comb = window[`${id}_c`].checked;
+  window[`${idi}_c`].onkeydown = window[`${idi}_c`].oninput = () => {
+    antenna.comb = window[`${idi}_c`].checked;
+    refreshSum(id, config);
   }
-  window[`${id}_a`].onkeydown = window[`${id}_a`].oninput = () => {
-    antenna.amount = parseNumber(window[`${id}_a`].value) | 0;
+  window[`${idi}_a`].onkeydown = window[`${idi}_a`].oninput = () => {
+    antenna.amount = parseNumber(window[`${idi}_a`].value) | 0;
+    refreshSum(id, config);
   }
 }
-function refreshTable(config, div, newAntenna) {
+function refreshTable(config, id, newAntenna) {
   let {antennas} = config;
-  let id = div.id;
+  let div = window[id + "_table"];
   let html = ``;
   html += `<table>`;
   html += `<tr>`;
@@ -150,17 +155,18 @@ function refreshTable(config, div, newAntenna) {
 
   for (let i = 0; i < antennas.length; i++) {
     let antenna = antennas[i];
-    setRowEvents(antenna, `${id}_${i}`);
+    setRowEvents(antenna, id, i, config);
     window[`${id}_${i}_d`].onclick = () => {
       deleteAntennaType(antennas, i);
-      refreshTable(config, div, newAntenna);
+      refreshTable(config, id, newAntenna);
     }
   }
   window[`${id}_add`].onclick = () => {
     let antenna = antennas.length > 0 ? antennas[antennas.length - 1] : { power: 5000, relay: false, combinable: true, amount: 1 };
     addAntennaType(antennas, antenna.power, antenna.relay, antenna.comb, antenna.amount);
-    refreshTable(config, div, newAntenna);
+    refreshTable(config, id, newAntenna);
   }
+  refreshSum(id, config);
 }
 initPanel("html_panel1", config1 = {
   name: "Tracking Station III",
@@ -173,12 +179,10 @@ initPanel("html_panel2", config2 = {
 initDragbar(html_panel1, html_panel1_dragbar);
 initDragbar(html_panel2, html_panel2_dragbar);
 initDragbar(html_panel, html_panel_dragbar);
-{
-  let refresh = () => {
-    let id = "html_panel";
-    window[id + "_directDist"].innerText = formatNumber(Math.sqrt(config1.directPower * config2.directPower)) + "m";
-    window[id + "_relayDist"].innerText = formatNumber(Math.sqrt(config1.relayPower * config2.relayPower)) + "m";
-  }
-  setInterval(refresh, 500);
-  refresh();
+
+function refreshResult() {
+  let id = "html_panel";
+  window[id + "_directDist"].innerText = formatNumber(Math.sqrt(config1.directPower * config2.directPower)) + "m";
+  window[id + "_relayDist"].innerText = formatNumber(Math.sqrt(config1.relayPower * config2.relayPower)) + "m";
 }
+
