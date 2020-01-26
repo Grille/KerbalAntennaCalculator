@@ -1,0 +1,121 @@
+body {
+  background-color:  #100f18;
+  color: #abec08;
+}
+#main {
+
+}
+th {
+  border-color: black;
+  border-width: 1;
+  background-color: #454950;
+  border-radius: 5px;
+}
+input {
+  background-color: #3a3a3f;
+  color: #abec08;
+  border-color: #1e2024;
+  width: 100;
+  text-align: center;
+  border-radius: 5px;
+}
+table {
+  background-color: #1e2024;
+  border-radius: 5px;
+}
+button {
+  background-image: linear-gradient(#878f9e, #454d5c);
+  border-color: #989fab;
+  color: #abec08;
+  border-radius: 5px;
+}
+.delete {
+  background-image: linear-gradient(rgb(255, 61, 61), rgb(141, 39, 39));
+  color: rgb(78, 20, 20);
+  border-color: brown;
+  width: 30px;
+}
+.add {
+  background-image: linear-gradient(rgb(84, 255, 61), rgb(48, 141, 39));
+  color: rgb(30, 78, 20);
+  border-color: rgb(56, 165, 42);
+  width: 30px;
+}
+
+input[type="checkbox"] {
+  display:none;
+}
+input[type="checkbox"] + label::before {
+  width: 15px;
+  height: 15px;
+  border-radius: 15px;
+  border: 2px solid #1e2024;
+  background-image: radial-gradient(#1e2024, #3a3a3f);
+  display: block;
+  content: "";
+  float: none;
+  margin-right: 40px;
+  margin-left: 40px;
+}
+input[type="checkbox"]:checked+label::before {
+  box-shadow: 0px 0px 5px #4bec3c;
+  border: 2px solid #2b8b23;
+  background-image: radial-gradient(rgb(160, 255, 147), rgb(48, 141, 39));
+}
+h4 {
+  margin: 0px;
+  width: 100px;
+  font-size: 1.0em;
+  font-weight: bold;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+.namefield {
+  background-color: inherit;
+  background-image: none;
+  border: none;
+  font-size: 1.0em;
+  font-weight: bold;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  height: 30;
+  width: 200;
+  text-align: left;
+  margin-left: 5;
+}
+::selection {
+  background: #042525; /* WebKit/Blink Browsers */
+}
+:focus {
+  outline: none;
+}
+.panel {
+  background-image: linear-gradient(#5d6169, #353840);
+  padding: 5;
+  width: fit-content;
+  border-radius: 10px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+.drag {
+  background-image: linear-gradient(#495469, #2b3142);
+  padding: 5;
+  width: 100%;
+  margin-left: -5;
+  margin-top: -5;
+  height: 20;
+  cursor: grab;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.label {
+  margin-left: 5px;
+  display: block;
+  width: 100px;
+  float:left;
+}
+.value {
+  display: block;
+  width: 100px;
+  float:left;
+  text-align: left;
+}
